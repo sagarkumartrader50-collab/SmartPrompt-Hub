@@ -5,82 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartPrompt Hub | Master the AI</title>
     <style>
-        :root { --primary: #00f2fe; --accent: #4facfe; --bg: #0b0f19; --card: #161e2d; --gold: #ffd700; }
-        body { background-color: var(--bg); color: #e2e8f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        
-        header { text-align: center; padding: 35px 15px; background: linear-gradient(to bottom, #1e293b, var(--bg)); border-bottom: 1px solid #334155; }
-        h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(45deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
-        .tagline { color: #94a3b8; margin-top: 10px; font-size: 1rem; }
-
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-        
-        .prompt-card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 25px; border: 1px solid #1e293b; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .badge { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
-        .badge-free { background: #22c55e; color: white; }
+        :root { --primary: #00f2fe; --accent: #4facfe; --bg: #0b0f19; --card: #161e2d; --gold: #ffd700; --text: #e2e8f0; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
+        header { text-align: center; padding: 40px 20px; background: linear-gradient(to bottom, #1e293b, var(--bg)); border-bottom: 1px solid #334155; }
+        h1 { font-size: 2.2rem; margin: 0; background: linear-gradient(45deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+        .container { padding: 20px; max-width: 800px; margin: auto; }
+        .search-box { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #334155; background: var(--card); color: white; margin-bottom: 20px; outline: none; }
+        .prompt-card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #1e293b; position: relative; }
+        .badge { position: absolute; top: 15px; right: 15px; padding: 5px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; }
+        .badge-free { background: #10b981; color: white; }
         .badge-pro { background: var(--gold); color: black; }
-
-        h3 { margin-top: 5px; color: white; font-size: 1.2rem; }
-        .prompt-box { background: #00000080; padding: 15px; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 0.9rem; margin: 15px 0; border-left: 4px solid var(--primary); color: #cbd5e1; }
-        .locked { filter: blur(6px); pointer-events: none; user-select: none; }
-        
-        .btn { width: 100%; border: none; padding: 16px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .prompt-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; font-family: monospace; font-size: 0.9rem; margin-bottom: 15px; color: #cbd5e1; }
+        .locked { filter: blur(6px); pointer-events: none; }
+        .btn { width: 100%; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .btn-free { background: linear-gradient(45deg, var(--primary), var(--accent)); color: #0b0f19; }
         .btn-pro { background: var(--gold); color: black; }
-        .btn:active { transform: scale(0.96); }
-
-        /* Payment Modal */
-        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:1000; justify-content:center; align-items:center; padding: 20px; }
-        .modal-box { background: var(--card); padding: 40px 20px; border-radius: 25px; text-align: center; border: 2px solid var(--gold); width: 100%; max-width: 400px; }
+        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center; padding: 20px; }
+        .modal-box { background: var(--card); padding: 30px; border-radius: 25px; text-align: center; border: 2px solid var(--gold); width: 100%; max-width: 400px; }
     </style>
 </head>
 <body>
-
     <header>
         <h1>SmartPrompt Hub</h1>
-        <p class="tagline">The Ultimate Destination for AI Creators 🚀</p>
+        <p style="color: #94a3b8;">Master the AI | Version 1.0</p>
     </header>
-
     <div class="container">
-        <div class="prompt-card">
-            <span class="badge badge-free">Free</span>
-            <h3>YouTube Viral Hook</h3>
-            <div class="prompt-box">"Act as a viral YouTuber. Generate 5 attention-grabbing hooks for a video about [Topic]..."</div>
-            <button class="btn btn-free" onclick="copy(this)">Copy Prompt</button>
-        </div>
-
-        <div class="prompt-card" style="border-color: var(--gold);">
-            <span class="badge badge-pro">Pro</span>
-            <h3>Trading Strategy AI</h3>
-            <div class="prompt-box locked">"Analyze the 1-hour chart for BTC/USDT. Identify support and resistance levels using Fibonacci..."</div>
-            <button class="btn btn-pro" onclick="openModal()">Unlock Pro Access 💎</button>
-        </div>
+        <input type="text" class="search-box" id="search" placeholder="Search for YouTube, Trading, Study..." onkeyup="search()">
+        <div id="list"></div>
     </div>
-
     <div id="modal">
         <div class="modal-box">
-            <h2 style="color:var(--gold)">Become a Pro Member!</h2>
-            <p>Unlock 50+ Secret Trading & Business Prompts.</p>
-            <h1 style="color:white; margin: 20px 0;">₹99 <small style="font-size:1rem; color:#94a3b8;">/month</small></h1>
-            <button class="btn btn-pro" onclick="window.location.href='https://razorpay.me/@yourname'">Pay with UPI</button>
-            <p onclick="closeModal()" style="color:#64748b; margin-top:20px; cursor:pointer; font-weight:bold;">Maybe Later</p>
+            <h2 style="color:var(--gold);">Unlock Pro Access 👑</h2>
+            <p>Get 50+ Premium Trading & Business Prompts.</p>
+            <h1>₹99 <small style="font-size:1rem;">/month</small></h1>
+            <button class="btn btn-pro" onclick="window.location.href='https://razorpay.me/@smartprompthub'">Pay with UPI</button>
+            <p onclick="closeModal()" style="color:#64748b; margin-top:15px; cursor:pointer; font-weight:bold;">Maybe Later</p>
         </div>
     </div>
-
     <script>
-        function copy(btn) {
-            const txt = btn.previousElementSibling.innerText;
-            navigator.clipboard.writeText(txt);
-            const oldText = btn.innerText;
-            btn.innerText = "✅ Prompt Copied!";
-            btn.style.background = "#22c55e";
-            setTimeout(() => { 
-                btn.innerText = oldText; 
-                btn.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
-            }, 2000);
+        const prompts = [
+            { cat: 'YouTube', type: 'free', title: 'Viral Video Hook', text: 'Act as a YouTube Expert. Write 5 hooks for [Topic] to maximize retention.' },
+            { cat: 'Trading', type: 'pro', title: 'BTC Analysis AI', text: 'Analyze BTC/USDT 4h chart for RSI divergence and breakout levels.' },
+            { cat: 'Study', type: 'free', title: 'Summary Master', text: 'Summarize the following text into 3 simple bullet points for a beginner.' },
+            { cat: 'Business', type: 'pro', title: 'Cold Email Strategy', text: 'Write a high-converting cold email for [Service] targeting [Industry].' },
+            { cat: 'Trading', type: 'pro', title: 'Bank Nifty Scalping', text: 'Analyze Bank Nifty for 5-minute scalping opportunities using VWAP and RSI.' },
+            { cat: 'YouTube', type: 'free', title: 'SEO Title Generator', text: 'Generate 10 clickable, SEO-friendly titles for a video about [Topic].' },
+            { cat: 'Study', type: 'pro', title: 'Exam Revision Plan', text: 'Create a 7-day revision plan for [Subject] using active recall and spaced repetition.' }
+        ];
+        function render(data) {
+            document.getElementById('list').innerHTML = data.map(p => `
+                <div class="prompt-card">
+                    <span class="badge ${p.type === 'free' ? 'badge-free' : 'badge-pro'}">${p.type.toUpperCase()}</span>
+                    <h3 style="margin-top:0; color:white;">${p.title}</h3>
+                    <div class="prompt-box ${p.type === 'pro' ? 'locked' : ''}">${p.text}</div>
+                    ${p.type === 'free' ? `<button class="btn btn-free" onclick="copyText(this, '${p.text}')">Copy Prompt</button>` : `<button class="btn btn-pro" onclick="openModal()">Unlock Pro 💎</button>`}
+                </div>
+            `).join('');
         }
-
+        function copyText(btn, text) {
+            navigator.clipboard.writeText(text);
+            btn.innerText = "✅ Prompt Copied!";
+            btn.style.background = "#10b981";
+            setTimeout(() => { btn.innerText = "Copy Prompt"; btn.style.background = ""; }, 2000);
+        }
+        function search() {
+            const val = document.getElementById('search').value.toLowerCase();
+            render(prompts.filter(p => p.title.toLowerCase().includes(val) || p.cat.toLowerCase().includes(val)));
+        }
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        render(prompts);
     </script>
 </body>
 </html>
