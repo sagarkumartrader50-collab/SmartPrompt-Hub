@@ -62,20 +62,4 @@
                     ${p.type === 'free' ? `<button class="btn btn-free" onclick="copyText(this, '${p.text}')">Copy Prompt</button>` : `<button class="btn btn-pro" onclick="openModal()">Unlock Pro 💎</button>`}
                 </div>
             `).join('');
-        }
-        function copyText(btn, text) {
-            navigator.clipboard.writeText(text);
-            btn.innerText = "✅ Prompt Copied!";
-            btn.style.background = "#10b981";
-            setTimeout(() => { btn.innerText = "Copy Prompt"; btn.style.background = ""; }, 2000);
-        }
-        function search() {
-            const val = document.getElementById('search').value.toLowerCase();
-            render(prompts.filter(p => p.title.toLowerCase().includes(val) || p.cat.toLowerCase().includes(val)));
-        }
-        function openModal() { document.getElementById('modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
-        render(prompts);
-    </script>
-</body>
-</html>
+        
