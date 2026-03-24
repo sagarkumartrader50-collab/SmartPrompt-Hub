@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPrompt Hub | Master the AI</title>
+    <style>
+        :root { --primary: #00f2fe; --accent: #4facfe; --bg: #0b0f19; --card: #161e2d; --gold: #ffd700; }
+        body { background-color: var(--bg); color: #e2e8f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        
+        header { text-align: center; padding: 35px 15px; background: linear-gradient(to bottom, #1e293b, var(--bg)); border-bottom: 1px solid #334155; }
+        h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(45deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+        .tagline { color: #94a3b8; margin-top: 10px; font-size: 1rem; }
+
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        
+        .prompt-card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 25px; border: 1px solid #1e293b; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .badge { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+        .badge-free { background: #22c55e; color: white; }
+        .badge-pro { background: var(--gold); color: black; }
+
+        h3 { margin-top: 5px; color: white; font-size: 1.2rem; }
+        .prompt-box { background: #00000080; padding: 15px; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 0.9rem; margin: 15px 0; border-left: 4px solid var(--primary); color: #cbd5e1; }
+        .locked { filter: blur(6px); pointer-events: none; user-select: none; }
+        
+        .btn { width: 100%; border: none; padding: 16px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .btn-free { background: linear-gradient(45deg, var(--primary), var(--accent)); color: #0b0f19; }
+        .btn-pro { background: var(--gold); color: black; }
+        .btn:active { transform: scale(0.96); }
+
+        /* Payment Modal */
+        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:1000; justify-content:center; align-items:center; padding: 20px; }
+        .modal-box { background: var(--card); padding: 40px 20px; border-radius: 25px; text-align: center; border: 2px solid var(--gold); width: 100%; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SmartPrompt Hub</h1>
+        <p class="tagline">The Ultimate Destination for AI Creators 🚀</p>
+    </header>
+
+    <div class="container">
+        <div class="prompt-card">
+            <span class="badge badge-free">Free</span>
+            <h3>YouTube Viral Hook</h3>
+            <div class="prompt-box">"Act as a viral YouTuber. Generate 5 attention-grabbing hooks for a video about [Topic]..."</div>
+            <button class="btn btn-free" onclick="copy(this)">Copy Prompt</button>
+        </div>
+
+        <div class="prompt-card" style="border-color: var(--gold);">
+            <span class="badge badge-pro">Pro</span>
+            <h3>Trading Strategy AI</h3>
+            <div class="prompt-box locked">"Analyze the 1-hour chart for BTC/USDT. Identify support and resistance levels using Fibonacci..."</div>
+            <button class="btn btn-pro" onclick="openModal()">Unlock Pro Access 💎</button>
+        </div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-box">
+            <h2 style="color:var(--gold)">Become a Pro Member!</h2>
+            <p>Unlock 50+ Secret Trading & Business Prompts.</p>
+            <h1 style="color:white; margin: 20px 0;">₹99 <small style="font-size:1rem; color:#94a3b8;">/month</small></h1>
+            <button class="btn btn-pro" onclick="window.location.href='https://razorpay.me/@yourname'">Pay with UPI</button>
+            <p onclick="closeModal()" style="color:#64748b; margin-top:20px; cursor:pointer; font-weight:bold;">Maybe Later</p>
+        </div>
+    </div>
+
+    <script>
+        function copy(btn) {
+            const txt = btn.previousElementSibling.innerText;
+            navigator.clipboard.writeText(txt);
+            const oldText = btn.innerText;
+            btn.innerText = "✅ Prompt Copied!";
+            btn.style.background = "#22c55e";
+            setTimeout(() => { 
+                btn.innerText = oldText; 
+                btn.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
+            }, 2000);
+        }
+
+        function openModal() { document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    </script>
+</body>
+</html>
