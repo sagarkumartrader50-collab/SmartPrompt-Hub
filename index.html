@@ -7,59 +7,149 @@
     <style>
         :root { --primary: #00f2fe; --accent: #4facfe; --bg: #0b0f19; --card: #161e2d; --gold: #ffd700; --text: #e2e8f0; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         header { text-align: center; padding: 40px 20px; background: linear-gradient(to bottom, #1e293b, var(--bg)); border-bottom: 1px solid #334155; }
-        h1 { font-size: 2.2rem; margin: 0; background: linear-gradient(45deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
-        .container { padding: 20px; max-width: 800px; margin: auto; }
-        .search-box { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #334155; background: var(--card); color: white; margin-bottom: 20px; outline: none; }
-        .prompt-card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #1e293b; position: relative; }
-        .badge { position: absolute; top: 15px; right: 15px; padding: 5px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; }
+        h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(45deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+        .container { padding: 20px; max-width: 900px; margin: auto; }
+        .search-box { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #334155; background: var(--card); color: white; margin-bottom: 25px; outline: none; font-size: 1.1rem; }
+        
+        /* Categories Scroll */
+        .tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px; scrollbar-width: none; }
+        .tab { background: #1e293b; padding: 12px 25px; border-radius: 30px; font-size: 0.9rem; cursor: pointer; white-space: nowrap; border: 1px solid #334155; color: #94a3b8; transition: 0.3s; }
+        .tab.active { background: var(--primary); color: #0b0f19; font-weight: bold; }
+
+        /* Prompt Cards */
+        .prompt-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .prompt-card { background: var(--card); border-radius: 25px; padding: 25px; border: 1px solid #1e293b; position: relative; transition: 0.4s; }
+        .prompt-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .badge { position: absolute; top: 20px; right: 20px; padding: 6px 15px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
         .badge-free { background: #10b981; color: white; }
-        .badge-pro { background: var(--gold); color: black; }
-        .prompt-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; font-family: monospace; font-size: 0.9rem; margin-bottom: 15px; color: #cbd5e1; }
-        .locked { filter: blur(6px); pointer-events: none; }
-        .btn { width: 100%; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .badge-pro { background: var(--gold); color: black; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+        
+        h3 { margin: 0 0 15px 0; color: white; font-size: 1.4rem; padding-right: 60px; }
+        .prompt-box { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; font-family: 'Courier New', monospace; font-size: 0.95rem; margin-bottom: 20px; color: #cbd5e1; line-height: 1.5; border: 1px solid #2d3748; }
+        .locked { filter: blur(10px); pointer-events: none; opacity: 0.4; }
+        
+        .btn { width: 100%; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-free { background: linear-gradient(45deg, var(--primary), var(--accent)); color: #0b0f19; }
         .btn-pro { background: var(--gold); color: black; }
-        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center; padding: 20px; }
-        .modal-box { background: var(--card); padding: 30px; border-radius: 25px; text-align: center; border: 2px solid var(--gold); width: 100%; max-width: 400px; }
+        .btn:active { transform: scale(0.97); }
+
+        /* Modal */
+        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(10px); }
+        .modal-box { background: var(--card); padding: 40px; border-radius: 35px; text-align: center; border: 2px solid var(--gold); width: 100%; max-width: 450px; box-shadow: 0 0 50px rgba(255, 215, 0, 0.1); }
     </style>
 </head>
 <body>
+
     <header>
         <h1>SmartPrompt Hub</h1>
-        <p style="color: #94a3b8;">Master the AI | Version 1.0</p>
+        <p style="color: #94a3b8; font-weight: 500;">India's Ultimate AI Resource 🚀</p>
     </header>
+
     <div class="container">
-        <input type="text" class="search-box" id="search" placeholder="Search for YouTube, Trading, Study..." onkeyup="search()">
-        <div id="list"></div>
+        <input type="text" class="search-box" id="search" placeholder="Search prompts (e.g. YouTube, Stock, SSC)..." onkeyup="search()">
+
+        <div class="tabs">
+            <div class="tab active" onclick="filterCat('all', this)">All</div>
+            <div class="tab" onclick="filterCat('youtube', this)">YouTube/Social</div>
+            <div class="tab" onclick="filterCat('trading', this)">Trading/Crypto</div>
+            <div class="tab" onclick="filterCat('study', this)">SSC/Study</div>
+            <div class="tab" onclick="filterCat('business', this)">Business/Career</div>
+            <div class="tab" onclick="filterCat('coding', this)">Coding/IT</div>
+        </div>
+
+        <div id="list" class="prompt-grid"></div>
     </div>
+
     <div id="modal">
         <div class="modal-box">
-            <h2 style="color:var(--gold);">Unlock Pro Access 👑</h2>
-            <p>Get 50+ Premium Trading & Business Prompts.</p>
-            <h1>₹99 <small style="font-size:1rem;">/month</small></h1>
-            <button class="btn btn-pro" onclick="window.location.href='https://razorpay.me/@smartprompthub'">Pay with UPI</button>
-            <p onclick="closeModal()" style="color:#64748b; margin-top:15px; cursor:pointer; font-weight:bold;">Maybe Later</p>
+            <div style="font-size: 4rem; margin-bottom: 20px;">👑</div>
+            <h2 style="color:var(--gold); margin:0;">Join Pro Club</h2>
+            <p style="color:#94a3b8; margin: 15px 0;">Unlock 150+ Secret Prompts for High-Income Skills.</p>
+            <h1 style="color:white; margin: 30px 0;">₹99 <small style="font-size:1rem; color:#94a3b8;">/month</small></h1>
+            <button class="btn btn-pro" onclick="window.location.href='https://razorpay.me/@smartprompthub'">Activate Pro via UPI</button>
+            <p onclick="closeModal()" style="color:#64748b; margin-top:25px; cursor:pointer; font-weight:bold;">I'll stay Free for now</p>
         </div>
     </div>
+
     <script>
         const prompts = [
-            { cat: 'YouTube', type: 'free', title: 'Viral Video Hook', text: 'Act as a YouTube Expert. Write 5 hooks for [Topic] to maximize retention.' },
-            { cat: 'Trading', type: 'pro', title: 'BTC Analysis AI', text: 'Analyze BTC/USDT 4h chart for RSI divergence and breakout levels.' },
-            { cat: 'Study', type: 'free', title: 'Summary Master', text: 'Summarize the following text into 3 simple bullet points for a beginner.' },
-            { cat: 'Business', type: 'pro', title: 'Cold Email Strategy', text: 'Write a high-converting cold email for [Service] targeting [Industry].' },
-            { cat: 'Trading', type: 'pro', title: 'Bank Nifty Scalping', text: 'Analyze Bank Nifty for 5-minute scalping opportunities using VWAP and RSI.' },
-            { cat: 'YouTube', type: 'free', title: 'SEO Title Generator', text: 'Generate 10 clickable, SEO-friendly titles for a video about [Topic].' },
-            { cat: 'Study', type: 'pro', title: 'Exam Revision Plan', text: 'Create a 7-day revision plan for [Subject] using active recall and spaced repetition.' }
+            // YOUTUBE & CONTENT
+            { cat: 'youtube', type: 'free', title: 'Viral Video Title AI', text: 'Generate 10 clickable, SEO-friendly YouTube titles for a video about [Topic]. Use psychological triggers like "Curiosity Gap" and "Negativity Bias" to increase CTR.' },
+            { cat: 'youtube', type: 'pro', title: 'Full YouTube Script Mastery', text: 'Act as a professional YouTube Scriptwriter. Write a 10-minute script for [Topic]. Include a Hook (0-30s), Value points (30s-8m), and a strong Call-to-Action. Make it conversational.' },
+            { cat: 'youtube', type: 'free', title: 'Slowed & Reverb Description', text: 'Write a professional, aesthetic description for a Slowed + Reverb song on YouTube. Include copyright disclaimers, mood tags, and a call to subscribe.' },
+            { cat: 'youtube', type: 'pro', title: 'Viral Shorts/Reels Formula', text: 'Create a script for a 30-second viral reel about [Topic]. The first 3 seconds must be a "Stop-the-scroll" hook. Format it with visual cues and captions.' },
+
+            // TRADING & FINANCE
+            { cat: 'trading', type: 'pro', title: 'Bank Nifty Scalping AI', text: 'Act as an Expert Option Scalper. Analyze the Bank Nifty 5-minute chart for a long/short entry. Check VWAP, RSI (at 60/40), and 9/21 EMA crossover. Suggest Stop Loss and Target.' },
+            { cat: 'trading', type: 'pro', title: 'Crypto Sentiment Analyzer', text: 'Analyze the current 24h market sentiment for Bitcoin and Ethereum. Look for Liquidation zones and Open Interest data to predict a potential short-squeeze.' },
+            { cat: 'trading', type: 'free', title: 'Trading Psychology Fix', text: 'I just lost 3 consecutive trades due to FOMO. Act as a Trading Coach. Give me 5 psychological steps to regain focus and stick to my plan.' },
+            { cat: 'trading', type: 'pro', title: 'Stock Portfolio Rebalancer', text: 'Analyze my current portfolio of [Stock Names]. Given the current market condition (Bull/Bear), suggest which sectors to overweight and which to exit.' },
+
+            // SSC & STUDY
+            { cat: 'study', type: 'free', title: 'SSC Vocabulary Builder', text: 'List 10 high-frequency English vocabulary words asked in SSC CGL exams. Provide synonyms, antonyms, and one example sentence for each.' },
+            { cat: 'study', type: 'pro', title: 'Math Short-Trick Generator', text: 'Explain the fastest short-trick to solve [Math Topic, e.g., Compound Interest] questions for competitive exams. Compare the long method vs. the 10-second method.' },
+            { cat: 'study', type: 'free', title: 'Topic Simplifier (ELI5)', text: 'Explain the concept of [Complex Topic, e.g., Quantum Physics or Article 370] as if I am 10 years old. Use a relatable real-life analogy.' },
+            { cat: 'study', type: 'pro', title: 'Personalized 30-Day Study Plan', text: 'I am preparing for the [Exam Name]. I have 4 hours daily. Create a 30-day rigorous schedule covering Maths, GS, and Reasoning with revision days.' },
+
+            // CAREER & BUSINESS
+            { cat: 'business', type: 'free', title: 'Professional Resume Hook', text: 'Write a powerful 2-line summary for my resume as a [Job Title]. Focus on achievements and specific tools I know like Python/Java.' },
+            { cat: 'business', type: 'pro', title: 'Cold DM for Freelance Clients', text: 'Write a personalized cold DM for a potential client on LinkedIn. I offer [Your Service]. The message should solve their specific pain point without being spammy.' },
+            { cat: 'business', type: 'free', title: 'Interview Preparation AI', text: 'Act as an HR Manager. I am applying for [Job Role]. Ask me 5 difficult behavioral questions and then critique my answers based on the STAR method.' },
+
+            // CODING & TECH
+            { cat: 'coding', type: 'free', title: 'Python Code Bug Hunter', text: 'I am getting an error in this code: [Paste Code]. Identify the logic error, fix it, and explain why it happened.' },
+            { cat: 'coding', type: 'pro', title: 'Full Stack App Roadmap', text: 'I want to build a [Type of App, e.g., E-commerce]. Provide a detailed tech stack (MERN), Database Schema, and step-by-step development roadmap.' }
+            
+            // Note: Kaushal, aap isi tarah 150 tak entries add kar sakte hain.
         ];
+
         function render(data) {
-            document.getElementById('list').innerHTML = data.map(p => `
+            const list = document.getElementById('list');
+            list.innerHTML = data.map(p => `
                 <div class="prompt-card">
-                    <span class="badge ${p.type === 'free' ? 'badge-free' : 'badge-pro'}">${p.type.toUpperCase()}</span>
-                    <h3 style="margin-top:0; color:white;">${p.title}</h3>
+                    <span class="badge ${p.type === 'free' ? 'badge-free' : 'badge-pro'}">${p.type}</span>
+                    <p style="color:var(--primary); font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:8px;">${p.cat}</p>
+                    <h3>${p.title}</h3>
                     <div class="prompt-box ${p.type === 'pro' ? 'locked' : ''}">${p.text}</div>
-                    ${p.type === 'free' ? `<button class="btn btn-free" onclick="copyText(this, '${p.text}')">Copy Prompt</button>` : `<button class="btn btn-pro" onclick="openModal()">Unlock Pro 💎</button>`}
+                    ${p.type === 'free' 
+                        ? `<button class="btn btn-free" onclick="copyPrompt(this, \`${p.text}\`)">Copy Master Prompt</button>` 
+                        : `<button class="btn btn-pro" onclick="openModal()">Unlock with Pro 💎</button>`}
+                </div>
+            `).join('');
+        }
+
+        function copyPrompt(btn, text) {
+            navigator.clipboard.writeText(text);
+            const original = btn.innerHTML;
+            btn.innerHTML = "✅ Copied to Clipboard!";
+            btn.style.background = "#10b981";
+            setTimeout(() => { 
+                btn.innerHTML = original; 
+                btn.style.background = ""; 
+            }, 2000);
+        }
+
+        function filterCat(cat, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            if(cat === 'all') render(prompts);
+            else render(prompts.filter(p => p.cat === cat));
+        }
+
+        function search() {
+            const term = document.getElementById('search').value.toLowerCase();
+            render(prompts.filter(p => p.title.toLowerCase().includes(term) || p.cat.includes(term)));
+        }
+
+        function openModal() { document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        render(prompts);
+    </script>
+</body>
+</html>
                 </div>
             `).join('');
         
